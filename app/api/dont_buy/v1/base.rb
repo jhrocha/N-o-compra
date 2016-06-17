@@ -7,6 +7,7 @@ module DontBuy
       end
 
       mount Causes
+      mount Auth
       route :any, '*path' do
         error!('This is not the endpoint you\'re looking for!', 404)
       end

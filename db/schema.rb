@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(version: 20160617012304) do
   add_foreign_key "customers", "causes"
   add_foreign_key "genders", "customers"
   add_foreign_key "sales_man_dont_buys", "users"
+  add_foreign_key "user_api_tokens", "users"
   add_foreign_key "user_roles", "roles"
   add_foreign_key "user_roles", "users"
 end
