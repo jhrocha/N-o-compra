@@ -23,6 +23,24 @@ class DontBuy::V1::Auth < Grape::API
       status 200
       {user: user, token: secret_key.token}
     end
+
+    desc 'Login for a user'
+    params do
+      requires :email, type: String, allow_blank: false, desc: 'Users email'
+      requires :password, type: String, allow_blank: false, desc: 'Users password'
+    end
+    post 'sign_in' do
+      user = User.find_by_email params[:email]
+
+      error! "Email #{params[:email]} or password is invalid", 500 unless user
+
+      error!  "Email #{params[:email]} or password is invalid", 500 unless user.valid_password? params[:password]
+
+      secret_key= generate_token_for_user user
+
+      {token: secret_key.token}
+    end
+
   end
 
 end
