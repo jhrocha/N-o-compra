@@ -7,7 +7,7 @@ class DontBuy::V1::Auth < Grape::API
   end
 
   resource :auth do
-
+    # TODO: Realizar verificação do tamanho do password
     desc 'Register a user'
     params do
     requires :cpf, type: String, allow_blank: false, desc: 'Identity of user'

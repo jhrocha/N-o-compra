@@ -9,9 +9,9 @@ module DontBuy
         end
 
         def current_user
-          token = UserAPIToken.find_by_token headers['Token']
+          token = UserApiToken.find_by_token headers['Token']
           if token
-            @current_user = User.find token.user_id
+            @current_user = User.find(token.user_id)
           else
             false
           end
