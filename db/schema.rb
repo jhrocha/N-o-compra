@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160617012304) do
+ActiveRecord::Schema.define(version: 20160620021436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,16 +38,16 @@ ActiveRecord::Schema.define(version: 20160617012304) do
     t.integer  "age_group_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.integer  "gender_id"
   end
+
+  add_index "customers", ["gender_id"], name: "index_customers_on_gender_id", using: :btree
 
   create_table "genders", force: :cascade do |t|
     t.string   "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "customer_id"
   end
-
-  add_index "genders", ["customer_id"], name: "index_genders_on_customer_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "description"
@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20160617012304) do
   add_foreign_key "causes", "sales_man_dont_buys"
   add_foreign_key "customers", "age_groups"
   add_foreign_key "customers", "causes"
-  add_foreign_key "genders", "customers"
+  add_foreign_key "customers", "genders"
   add_foreign_key "sales_man_dont_buys", "users"
   add_foreign_key "user_api_tokens", "users"
   add_foreign_key "user_roles", "roles"
