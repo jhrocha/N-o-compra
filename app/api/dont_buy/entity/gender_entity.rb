@@ -1,5 +1,4 @@
-module DontBuy
-  module V1
+module DontBuy::V1::Entity
     class GenderEntity < Grape::Entity
       unexpose :id
       unexpose :created_at
@@ -7,5 +6,4 @@ module DontBuy
       unexpose :customer_id
       expose :description
     end
-  end
 end
