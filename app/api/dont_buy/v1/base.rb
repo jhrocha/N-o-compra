@@ -16,10 +16,17 @@ module DontBuy
             false
           end
         end
+
+        def is_admin?
+          user_role= UserRole.find_by(user_id:@current_user.id)
+          role= Role.find user_role.role_id
+          error! "Access denied for this endpoint", 500 unless role.description == 'admin'
+        end
       end
 
       mount Causes
       mount Auth
+      mount AdminStatistics
       route :any, '*path' do
         error!('This is not the endpoint you\'re looking for!', 404)
       end
