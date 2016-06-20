@@ -7,21 +7,25 @@ class DontBuy::V1::Auth < Grape::API
   end
 
   resource :auth do
-    # TODO: Realizar verificação do tamanho do password
     desc 'Register a user'
     params do
     requires :cpf, type: String, allow_blank: false, desc: 'Identity of user'
     requires :email, type: String, allow_blank: false, desc: 'Identity of user'
     requires :password, type: String, length: 9, allow_blank: false, desc: 'Password of account'
+    requires :role, type: String, allow_blank: false, values: ['admin','salesman'], desc: 'Role for user'
   end
     post 'sign_up' do
       error! "User with cpf #{params[:cpf]} has already registered", 500 if User.find_by cpf: params[:cpf]
       error! "User with email #{params[:email]} has already registered", 500 if User.find_by cpf: params[:email]
 
+      role= Role.find_by description: params[:role]
+      params.delete :role
       user= User.create params
+      UserRole.create(user_id:user.id, role_id: role.id)
+
       secret_key= generate_token_for_user user
       status 200
-      {user: user, token: secret_key.token}
+      {user: user, token: secret_key.token, role: role.description}
     end
 
     desc 'Login for a user'
