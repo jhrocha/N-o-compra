@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620021436) do
+ActiveRecord::Schema.define(version: 20160620034428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,7 +22,10 @@ ActiveRecord::Schema.define(version: 20160620021436) do
     t.integer  "final_age"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "customer_id"
   end
+
+  add_index "age_groups", ["customer_id"], name: "index_age_groups_on_customer_id", using: :btree
 
   create_table "causes", force: :cascade do |t|
     t.string   "description"
@@ -35,19 +38,20 @@ ActiveRecord::Schema.define(version: 20160620021436) do
 
   create_table "customers", force: :cascade do |t|
     t.integer  "cause_id"
-    t.integer  "age_group_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "gender_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  add_index "customers", ["gender_id"], name: "index_customers_on_gender_id", using: :btree
+  add_index "customers", ["cause_id"], name: "index_customers_on_cause_id", using: :btree
 
   create_table "genders", force: :cascade do |t|
     t.string   "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "customer_id"
   end
+
+  add_index "genders", ["customer_id"], name: "index_genders_on_customer_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "description"
@@ -96,10 +100,10 @@ ActiveRecord::Schema.define(version: 20160620021436) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "age_groups", "customers"
   add_foreign_key "causes", "sales_man_dont_buys"
-  add_foreign_key "customers", "age_groups"
   add_foreign_key "customers", "causes"
-  add_foreign_key "customers", "genders"
+  add_foreign_key "genders", "customers"
   add_foreign_key "sales_man_dont_buys", "users"
   add_foreign_key "user_api_tokens", "users"
   add_foreign_key "user_roles", "roles"

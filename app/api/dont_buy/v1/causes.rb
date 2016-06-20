@@ -22,23 +22,55 @@ module DontBuy
         post 'create' do
           error! "The age is invalid", 500 if params[:customer][:initial_age].to_i>params[:customer][:final_age].to_i
 
-          customer= params[:customer]
-
           sales_man= SalesManDontBuy.create(user_id:current_user.id)
-          age_group= AgeGroup.create(initial_age: customer[:initial_age], final_age: customer[:final_age])
           cause= Cause.create(description: params[:description], sales_man_dont_buy_id: sales_man.id)
-          customer= Customer.create(cause_id: cause.id, age_group_id: age_group.id)
+          customer= Customer.create(cause_id: cause.id)
+          age_group= AgeGroup.create(initial_age: params[:customer][:initial_age], final_age: params[:customer][:final_age], customer_id: customer.id)
           gender= Gender.create(description: params[:customer][:gender], customer_id: customer.id)
 
+          #TODO Use Grape entity
           status 200
           {
               cause: cause,
               customer:{
                   gender: customer.gender.description,
-                  initial_age: customer.age_group.initial_age,
-                  final_age: customer.age_group.final_age,
+                  initial_age: cause.customer.age_group.initial_age,
+                  final_age: cause.customer.age_group.final_age,
               }
           }
+        end
+
+        desc 'List causes by dates'
+        params do
+          requires :start_date, type: Date
+          requires :end_date, type: Date
+        end
+        post 'list_by_dates' do
+
+          error! "The start date is greater than the end", 500 if params[:start_date] > params[:end_date]
+
+          sales_id= SalesManDontBuy.where(user_id: current_user.id).pluck(:id)
+          causes_list= Array.new
+
+          #TODO: Use Grape-entity
+          sales_id.each do |identifier|
+            c= Cause.find_by sales_man_dont_buy_id: identifier
+            cause= {
+                description: c.description,
+                created_at: c.created_at,
+                customer:{
+                    gender: c.customer.gender.description,
+                    age_group:{
+                        start_age: c.customer.age_group.initial_age,
+                        end_age: c.customer.age_group.final_age
+                    }
+                }
+            }
+
+            causes_list << cause
+          end
+
+          causes_list
         end
 
       end
