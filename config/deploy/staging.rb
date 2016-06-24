@@ -1,3 +1,13 @@
+# server '107.170.178.69', user: 'passenger', roles: %w{web app}
+set :server, "server"
+server fetch(:server), user: fetch(:user), roles: %w{web app}, primary: true
+role :app, "#{fetch(:user)}@#{fetch(:server)}"
+role :web, "#{fetch(:user)}@#{fetch(:server)}"
+role :db,  "#{fetch(:user)}@#{fetch(:server)}"
+set :stage, :stage
+set :rvm_ruby_version, "#{fetch(:ruby_version)}@stage.#{fetch(:ruby_gemset)}"
+set :deploy_to, "#{fetch(:base_path)}/stage"
+
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
