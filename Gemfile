@@ -39,6 +39,9 @@ gem 'hashie-forbidden_attributes'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'devise_token_auth'
 
+#deploy
+gem 'capistrano'
+
 gem 'dotenv-rails'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
