@@ -16,7 +16,7 @@ class DontBuy::V1::Auth < Grape::API
   end
     post 'sign_up' do
       error! "User with cpf #{params[:cpf]} has already registered", 500 if User.find_by cpf: params[:cpf]
-      error! "User with email #{params[:email]} has already registered", 500 if User.find_by cpf: params[:email]
+      error! "User with email #{params[:email]} has already registered", 500 if User.find_by email: params[:email]
 
       role= Role.find_by description: params[:role]
       params.delete :role
