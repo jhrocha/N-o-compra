@@ -40,7 +40,10 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'devise_token_auth'
 
 #deploy
-gem 'capistrano', '~> 3.4.0'
+gem 'capistrano', '~> 3.5.0'
+gem 'capistrano-rails', '~> 1.1'
+gem 'capistrano-rvm'
+gem 'capistrano-bundler', '~>1.1'
 
 gem 'dotenv-rails'
 group :development, :test do

@@ -25,6 +25,7 @@ class DontBuy::V1::Auth < Grape::API
 
       secret_key= generate_token_for_user user
       status 200
+
       {user: user, token: secret_key.token, role: role.description}
     end
 

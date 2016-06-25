@@ -1,6 +1,4 @@
-#set :repo_url, 'git@bitbucket.org:traktopro/meuvalor.git'
-# config valid only for Capistrano 3.1
-lock '3.4.1'
+lock '3.5'
 
 set :application, "reasons_for_not_buying_api"
 set :repo_url, "https://github.com/jhrocha/reasons_for_not_buying_api.git"
@@ -25,7 +23,7 @@ set :format, :pretty
 set :log_level, :debug
 
 # Default value for :pty is false
-set :pty, true
+set :pty, false
 
 # Default value for :linked_files is []
 set :linked_files, %w{.env}
@@ -34,11 +32,13 @@ set :linked_files, %w{.env}
 set :linked_dirs, %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # Default value for keep_releases is 5
-set :keep_releases, 5
+set :keep_releases, 8
 
-set :ssh_options, { forward_agent: true }
+set :ssh_options, {
+    forward_agent: true
+}
 
-SSHKit.config.command_map[:rake]  = "bundle exec rake"
+SSHKit.config.command_map[:rake]  = "bundle exec rake" #8
 SSHKit.config.command_map[:rails] = "bundle exec rails"
 
 namespace :deploy do
@@ -50,7 +50,7 @@ namespace :deploy do
     end
   end
 
-  after :publishing, :restart
+  after :publishing, :restart, :update_cron
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
