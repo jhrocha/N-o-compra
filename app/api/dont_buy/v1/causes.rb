@@ -6,6 +6,16 @@ module DontBuy
       end
 
       helpers do
+        def mount_hash_cause(cause: cause)
+          {
+              cause: cause,
+              customer:{
+                  created_at: cause.customer.created_at,
+                  gender: cause.customer.gender,
+                  age_group: cause.customer.age_group
+              }
+          }
+        end
       end
 
       resource :cause do
@@ -31,19 +41,8 @@ module DontBuy
           age_group= AgeGroup.create(initial_age: params[:customer][:initial_age], final_age: params[:customer][:final_age], customer_id: customer.id)
           gender= Gender.create(description: params[:customer][:gender], customer_id: customer.id)
 
-          hash_cause={
-              cause: cause,
-              customer:{
-                  created_at: customer.created_at,
-                  gender: customer.gender,
-                  age_group: cause.customer.age_group
-              }
-          }
-
-          p customer.gender
-
           status 200
-          present hash_cause, with: DontBuy::V1::Entities::DontBuyCauseEntity
+          present mount_hash_cause(cause:cause), with: DontBuy::V1::Entities::DontBuyCauseEntity
         end
 
         desc 'List causes by dates'
@@ -58,27 +57,12 @@ module DontBuy
           sales_id= SalesManDontBuy.where(user_id: current_user.id).pluck(:id)
           causes_list= Array.new
 
-          #TODO: Use Grape-entities
           sales_id.each do |identifier|
             c= Cause.find_by sales_man_dont_buy_id: identifier
-            cause= {
-                description: c.description,
-                question: c.question,
-                answer: c.answer,
-                created_at: c.created_at,
-                customer:{
-                    gender: c.customer.gender.description,
-                    age_group:{
-                        start_age: c.customer.age_group.initial_age,
-                        end_age: c.customer.age_group.final_age
-                    }
-                }
-            }
-
-            causes_list << cause
+            causes_list << mount_hash_cause(cause:c)
           end
 
-          causes_list
+          present causes_list, with: DontBuy::V1::Entities::DontBuyCauseEntity
         end
 
       end
