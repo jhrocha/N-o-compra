@@ -1,6 +1,4 @@
-#set :repo_url, 'git@bitbucket.org:traktopro/meuvalor.git'
-# config valid only for Capistrano 3.1
-lock '3.4.1'
+lock '3.5'
 
 set :application, "reasons_for_not_buying_api"
 set :repo_url, "https://github.com/jhrocha/reasons_for_not_buying_api.git"
