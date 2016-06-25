@@ -13,7 +13,7 @@ class DontBuy::V1::AdminStatistics < Grape::API
     end
     post 'all_causes' do
       causes= Cause.where(created_at: params[:start_date]..params[:end_date])
-      causes= causes.group_by(&:description)
+      causes= causes.group_by(&:answer)
 
       status 200
       causes

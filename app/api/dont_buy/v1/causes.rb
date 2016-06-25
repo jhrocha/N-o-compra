@@ -12,7 +12,9 @@ module DontBuy
 
         desc 'Create a dont buy cause'
         params do
-          requires :description, type: String
+          optional :description, type: String
+          requires :question, type: String
+          requires :answer, type: String
           requires :customer, type: Hash do
             requires :gender, type: String, values: ['m','f']
             requires :initial_age, type: Integer
@@ -23,7 +25,8 @@ module DontBuy
           error! "The age is invalid", 500 if params[:customer][:initial_age].to_i>params[:customer][:final_age].to_i
 
           sales_man= SalesManDontBuy.create(user_id:current_user.id)
-          cause= Cause.create(description: params[:description], sales_man_dont_buy_id: sales_man.id)
+          cause= Cause.create(description: params[:description], answer: params[:answer], question: params[:question],
+                              sales_man_dont_buy_id: sales_man.id)
           customer= Customer.create(cause_id: cause.id)
           age_group= AgeGroup.create(initial_age: params[:customer][:initial_age], final_age: params[:customer][:final_age], customer_id: customer.id)
           gender= Gender.create(description: params[:customer][:gender], customer_id: customer.id)
@@ -57,6 +60,8 @@ module DontBuy
             c= Cause.find_by sales_man_dont_buy_id: identifier
             cause= {
                 description: c.description,
+                question: c.question,
+                answer: c.answer,
                 created_at: c.created_at,
                 customer:{
                     gender: c.customer.gender.description,
