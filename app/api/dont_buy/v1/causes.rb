@@ -31,16 +31,19 @@ module DontBuy
           age_group= AgeGroup.create(initial_age: params[:customer][:initial_age], final_age: params[:customer][:final_age], customer_id: customer.id)
           gender= Gender.create(description: params[:customer][:gender], customer_id: customer.id)
 
-          #TODO Use Grape entity
-          status 200
-          {
+          hash_cause={
               cause: cause,
               customer:{
-                  gender: customer.gender.description,
-                  initial_age: cause.customer.age_group.initial_age,
-                  final_age: cause.customer.age_group.final_age,
+                  created_at: customer.created_at,
+                  gender: customer.gender,
+                  age_group: cause.customer.age_group
               }
           }
+
+          p customer.gender
+
+          status 200
+          present hash_cause, with: DontBuy::V1::Entities::DontBuyCauseEntity
         end
 
         desc 'List causes by dates'
@@ -55,7 +58,7 @@ module DontBuy
           sales_id= SalesManDontBuy.where(user_id: current_user.id).pluck(:id)
           causes_list= Array.new
 
-          #TODO: Use Grape-entity
+          #TODO: Use Grape-entities
           sales_id.each do |identifier|
             c= Cause.find_by sales_man_dont_buy_id: identifier
             cause= {
