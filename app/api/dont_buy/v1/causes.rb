@@ -23,7 +23,7 @@ module DontBuy
         desc 'Create a dont buy cause'
         params do
           optional :description, type: String
-          requires :question, type: String
+          optional :question, type: String
           requires :answer, type: String
           requires :visited_at, type: Date, allow_blank: false
           requires :customer, type: Hash do
