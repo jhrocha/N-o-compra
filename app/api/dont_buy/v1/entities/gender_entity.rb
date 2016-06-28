@@ -1,4 +1,4 @@
-module DontBuy::V1::Entity
+module DontBuy::V1::Entities
     class GenderEntity < Grape::Entity
       unexpose :id
       unexpose :created_at

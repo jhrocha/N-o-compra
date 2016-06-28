@@ -1,8 +1,9 @@
-module DontBuy::V1::Entity
+module DontBuy::V1::Entities
   class UserEntity < Grape::Entity
         expose :cpf
         unexpose :created_at
         unexpose :updated_at
-        expose :token, using
+        expose :token
+        expose :role
       end
 end
