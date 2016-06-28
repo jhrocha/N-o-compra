@@ -32,7 +32,7 @@ module DontBuy
             requires :final_age, type: Integer
           end
         end
-        post 'create' do
+        get 'create' do
           error! "The age is invalid", 500 if params[:customer][:initial_age].to_i>params[:customer][:final_age].to_i
 
           sales_man= SalesManDontBuy.create(user_id:current_user.id)
