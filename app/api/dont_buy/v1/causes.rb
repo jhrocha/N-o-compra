@@ -25,6 +25,7 @@ module DontBuy
           optional :description, type: String
           requires :question, type: String
           requires :answer, type: String
+          requires :visited_at, type: Date, allow_blank: false
           requires :customer, type: Hash do
             requires :gender, type: String, values: ['m','f']
             requires :initial_age, type: Integer
@@ -36,7 +37,7 @@ module DontBuy
 
           sales_man= SalesManDontBuy.create(user_id:current_user.id)
           cause= Cause.create(description: params[:description], answer: params[:answer], question: params[:question],
-                              sales_man_dont_buy_id: sales_man.id)
+                              sales_man_dont_buy_id: sales_man.id, visited_at: params[:visited_at].to_s)
           customer= Customer.create(cause_id: cause.id)
           age_group= AgeGroup.create(initial_age: params[:customer][:initial_age], final_age: params[:customer][:final_age], customer_id: customer.id)
           gender= Gender.create(description: params[:customer][:gender], customer_id: customer.id)
