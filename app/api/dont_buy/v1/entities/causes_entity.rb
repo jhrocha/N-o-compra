@@ -6,5 +6,6 @@ module DontBuy::V1::Entities
     expose :answer
     expose :created_at
     expose :updated_at
+    expose :visited_at
   end
 end
