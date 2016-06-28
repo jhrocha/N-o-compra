@@ -25,7 +25,7 @@ class DontBuy::V1::AdminStatistics < Grape::API
       requires :end_date, type: Date, allow_blank: false
       requires :group_by, type: String, allow_blank: false, values: ["answer", "description", "question"]
     end
-    post 'all_causes' do
+    get 'all_causes' do
       causes= Cause.where(created_at: params[:start_date]..params[:end_date])
       groups= causes.group_by(&params[:group_by].to_sym)
       cause_list= Array.new
